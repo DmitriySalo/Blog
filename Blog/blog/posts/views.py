@@ -1,6 +1,8 @@
-from django.http import HttpResponse
-from django.shortcuts import render,get_object_or_404
+from django.http import HttpResponse,HttpResponseRedirect
+from django.shortcuts import render,get_object_or_404,redirect
 from .models import Post
+from .forms import PostForm
+from django.contrib import messages
 
 
 
@@ -23,10 +25,26 @@ def post_list(request):
 
 	# 	}
 	
-	return render(request, 'blog/index.html',context)
+	return render(request, 'blog/post_list.html',context)
 	#return HttpResponse("<h1>List</h1>")
 def post_create(request):
-	return HttpResponse("<h1>Create</h1>")
+	form =PostForm(request.POST or None)
+	# if request.method == 'POST':
+	# 	print (request.POST.get("content"))
+	# 	print (request.POST.get("title"))
+	if form.is_valid():
+		instance = form.save(commit=False)
+		# print(form.cleaned_data.get("title"))
+		instance.save()
+		messages.success(request,"Successfully Created")
+		return HttpResponseRedirect(instance.get_absolute_url())
+
+	context = {
+
+		"form":form,
+		
+	}
+	return render(request, 'blog/post_form.html',context)
 
 def post_detail(request,id):
 	#instance = Post.objects.get(id=1)
@@ -38,8 +56,26 @@ def post_detail(request,id):
 	}
 	return render(request, 'blog/post_detail.html',context)
 
-def post_update(request):
-	return HttpResponse("<h1>update</h1>")
+def post_update(request, id=None):
+	instance = get_object_or_404(Post,id=id)
+	form =PostForm(request.POST or None,instance=instance)
+	if form.is_valid():
+		instance = form.save(commit=False)
+		instance.save()
 
-def post_delete(request):
-	return HttpResponse("<h1>delete</h1>")
+		messages.success(request,"Successfully Update")
+		return HttpResponseRedirect(instance.get_absolute_url())
+
+	context = {
+		"title":instance.title,
+		"instance": instance,
+		'form': form,
+	}
+
+	return render(request, 'blog/post_form.html',context)
+
+def post_delete(request, id=None):
+	instance = get_object_or_404(Post, id=id)
+	instance.delete()
+	messages.success(request,"Successfully deleted")
+	return redirect("posts:list")

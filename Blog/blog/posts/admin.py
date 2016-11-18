@@ -8,7 +8,7 @@ class PostAdmin(admin.ModelAdmin):
 	list_editable = ["title"]
 	list_filter =["updated","timestamp"]
 
-	search_fields=["title","content"]
+	search_fields=["title","content"] 
 	class Meta:
 		model = Post
 
