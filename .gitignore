@@ -4,4 +4,4 @@ blogvenv
 db.sqlite3
 .DS_Store
 media_cdn/
-static_cdn/
+
