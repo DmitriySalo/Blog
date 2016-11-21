@@ -1,5 +1,6 @@
 
 {% extends "blog/base.html" %}
+{% load urlify %}
 
 
 
@@ -13,13 +14,29 @@
 		  	<img  src="{{ instance.image.url }}" class='img-responsive'>
 		{% endif %}
 
-<h1>{{instance.title}}<small>{{instance.timestamp}}</small></h1><br>
+<h1>{{instance.title}}<small>{% if instance.draft %}<span style="color: red;" >  Draft</span>
+    {% endif %}   {{instance.publish}}</small></h1><br>
+{% if instance.user.get_full_name %}
+<p>Author: {{ instance.user.get_full_name }}</p>
+{% endif %}
 
 
+<a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}/">
+Facebook
+</a>
+
+<a href="https://twitter.com/home?status={{ instance.content|truncatechars:80|urlify}}%20{{ request.build_absolute_uri }}/">
+Twitter
+</a>
+
+<a href='https://plus.google.com/share?url={{ request.build_absolute_uri }}'> Google+ </a>
 
 {{instance.content|linebreaks}}<br>
+
+<!-- <div class="fb-comments" data-href="{{ request.build_absolute_uri }}" data-numposts="5"></div> -->
 <!-- {{instance.updated}}<br>
 {{instance.id}}<br> -->
+
 </div>
 
 {% endblock content %}
