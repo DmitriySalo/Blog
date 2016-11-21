@@ -18,6 +18,8 @@ class BlogViewSet(viewsets.ModelViewSet):
 
 
 
+
+
 def post_list(request):
 	today = timezone.now().date()
 	queryset_list = Post.objects.active()

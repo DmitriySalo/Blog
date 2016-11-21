@@ -32,6 +32,8 @@ class Post(models.Model):
 	timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
 
 	objects = PostManager()
+	class Meta:
+		ordering = ('created',)
 
 
 	def __str__(self):
