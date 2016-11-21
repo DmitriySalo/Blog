@@ -7,6 +7,16 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils.six.moves.urllib.parse import quote_plus
 from django.utils import timezone
 from django.db.models import Q
+from rest_framework import viewsets
+from posts.serializers import BlogSerializer
+
+
+
+class BlogViewSet(viewsets.ModelViewSet):
+	queryset = Post.objects.all()
+	serializer_class = BlogSerializer
+
+
 
 def post_list(request):
 	today = timezone.now().date()
